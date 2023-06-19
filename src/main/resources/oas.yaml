@@ -1,0 +1,156 @@
+swagger: '2.0'
+info:
+  title: Employee-Service
+  contact:
+    name: Nishant Handa
+    email: nh124001@gmail.com
+  description: |-
+    Employee Service is a sample microservice for showing implementation of custom bean validation in
+    open api generator.
+  version: 1.0.0
+host: serverRoot
+basePath: /emp-service/v1
+schemes:
+  - http
+consumes:
+  - application/json;charset=utf-8
+produces:
+  - application/json;charset=utf-8
+tags:
+  - name: employee
+paths:
+  /employee:
+    post:
+      operationId: saveEmployee
+      summary: Creates an Employee
+      description: This operation creates a new employee
+      tags:
+        - employee
+      parameters:
+        - name: employee
+          description: The employee to be created
+          required: true
+          schema:
+            $ref: '#/definitions/Employee'
+          in: body
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Employee'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/Error'
+        '405':
+          description: Method Not allowed
+          schema:
+            $ref: '#/definitions/Error'
+        '409':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+  /employee/{id}:
+    get:
+      operationId: retrieveEmployee
+      summary: Retrieves an emplopyee by id
+      description: This operation retrieves an employee by id.
+      tags:
+        - employee
+      parameters:
+        - name: id
+          description: Identifier of an employee
+          required: true
+          type: integer
+          in: path
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Employee'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        '405':
+          description: Method Not allowed
+          schema:
+            $ref: '#/definitions/Error'
+        '409':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Employee:
+    type: object
+    description: An Employee is a working resource in an organization.
+    required:
+      - id
+      - name
+      - age
+      - type
+    properties:
+      id:
+        type: integer
+        description: Unique identifier for employee
+      name:
+        type: string
+        description: Name of the employee
+      age:
+        type: integer
+        description: Age of the employee
+      type:
+        type: string
+        description: Type of employee PRIVATE or BUSINESS
+        x-constraints: "@ValidType"
+  Error:
+    description: Used when an API throws an Error, typically with a HTTP error response-code (3xx, 4xx, 5xx)
+    type: object
+    required:
+      - code
+      - reason
+    properties:
+      code:
+        type: string
+        description: Application relevant detail, defined in the API or a common list.
+      reason:
+        type: string
+        description: Explanation of the reason for the error which can be shown to a client user.
+      message:
+        type: string
+        description: More details and corrective actions related to the error which can be shown to a client user.
+      status:
+        type: string
+        description: HTTP Error code extension
+      referenceError:
+        type: string
+        format: uri
+        description: URI of documentation describing the error.
